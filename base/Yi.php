@@ -35,6 +35,7 @@ class Yi
         $files = $this->_scandir($dir);
         $list = [];
         $tags = [];
+        $times = [];
         foreach ($files as $filename) {
             $relativeName = str_replace([$baseDir . '/', '.md'], '', $filename);
             $_arr = explode('/', $relativeName);
@@ -49,7 +50,10 @@ class Yi
                 'url' => 'view/' . urlencode($relativeName),
                 'created_time' => date('Y-m-d H:i:s', filectime($filename)),
             ];
+            $times[] = filectime($filename);
         }
+
+        array_multisort($times, SORT_DESC, $list);
 
         $this->_render([
             'list' => $list,

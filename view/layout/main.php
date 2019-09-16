@@ -12,5 +12,7 @@
     <?= $this->content ?>
 </div>
 <?= $this->jsScript ?>
+
+<footer class="container modal-footer">SIDNEY YI © <?=date('Y')?>-<?=date('Y')?></footer>
 </body>
 </html>

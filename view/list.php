@@ -1,3 +1,15 @@
+<?php if ($this->tags): ?>
+    <div>
+        <div class="pb-2">分类</div>
+        <?php foreach ($this->tags as $tag): ?>
+            <div class="d-inline-block">
+                <a href="<?= $tag['url'] ?>"><span><?= $tag['name'] ?></span></a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
+
+<div class="pt-4">列表</div>
 <div>
     <?php foreach ($this->list as $item): ?>
         <a href="<?= $item['url'] ?>">
@@ -8,14 +20,3 @@
         </a>
     <?php endforeach; ?>
 </div>
-
-<?php if ($this->tags): ?>
-    <div class="pt-4">
-        <div class="pb-2">分类</div>
-        <?php foreach ($this->tags as $tag): ?>
-            <div class="d-inline-block">
-                <a href="<?= $tag['url'] ?>"><span><?= $tag['name'] ?></span></a>
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
