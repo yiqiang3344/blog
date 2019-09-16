@@ -39,7 +39,7 @@ class Yi
             $relativeName = str_replace([$baseDir . '/', '.md'], '', $filename);
             $_arr = explode('/', $relativeName);
             if (count($_arr) > 1 && $_arr[0] != $category) {
-                $tags[] = [
+                $tags[$_arr[0]] = [
                     'url' => '/list?c=' . $_arr[0],
                     'name' => $_arr[0],
                 ];
