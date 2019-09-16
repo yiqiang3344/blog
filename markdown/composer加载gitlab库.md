@@ -1,6 +1,5 @@
-#composer加载gitlab库
-
 ##创建gitlab库
+
 代码放在src目录下，定义composer.json，如：
 ```json
 {

@@ -34,6 +34,7 @@ class Yi
             $list[] = [
                 'title' => str_replace('.md', '', basename($filename)),
                 'url' => 'view/' . urlencode(str_replace([$dir . '/', '.md'], '', $filename)),
+                'created_time' => date('Y-m-d', filectime($filename)),
             ];
         }
         $this->render(['list' => $list,], 'list');
@@ -66,6 +67,7 @@ class Yi
     public function actionView($blog)
     {
         $this->cssStyle = [
+            'bootstrap.css',
             'base.css',
             'han.css',
         ];
@@ -74,32 +76,33 @@ class Yi
             die('page not found');
         }
         $markdown = file_get_contents($file);
-        $this->_viewByJs($markdown);
+        $data = [
+            'title' => str_replace('.md', '', basename($file)),
+            'content' => $markdown,
+            'created_time' => date('Y-m-d H:i:s', filectime($file)),
+        ];
+        $this->_viewByJs($data);
     }
 
     /**
      * @throws \Exception
      * @throws \Throwable
      */
-    private function _viewByPhp($markdown)
+    private function _viewByPhp($data)
     {
         $parser = new GithubMarkdown();
-        $content = $parser->parse($markdown);
-        $this->render([
-            'content' => $content,
-        ], 'view');
+        $data['content'] = $parser->parse($data['content']);
+        $this->render($data, 'view');
     }
 
     /**
      * @throws \Exception
      * @throws \Throwable
      */
-    private function _viewByJs($markdown)
+    private function _viewByJs($data)
     {
-        $content = json_encode($markdown);
-        $this->render([
-            'content' => $content,
-        ], 'view_js');
+        $data['content'] = json_encode($data['content']);
+        $this->render($data, 'view_js');
     }
 
     /**
