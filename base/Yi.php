@@ -23,21 +23,38 @@ class Yi
      */
     public function actionList()
     {
+        $category = $_GET['c'] ?? '';
+
         $this->cssStyle = [
+            'bootstrap.css',
             'base.css',
             'han.css',
         ];
-        $dir = $this->_getMarkdownPath();
+        $baseDir = $this->_getMarkdownPath();
+        $dir = $category ? $baseDir . '/' . $category : $baseDir;
         $files = $this->_scandir($dir);
         $list = [];
+        $tags = [];
         foreach ($files as $filename) {
+            $relativeName = str_replace([$baseDir . '/', '.md'], '', $filename);
+            $_arr = explode('/', $relativeName);
+            if (count($_arr) > 1 && $_arr[0] != $category) {
+                $tags[] = [
+                    'url' => '/list?c=' . $_arr[0],
+                    'name' => $_arr[0],
+                ];
+            }
             $list[] = [
                 'title' => str_replace('.md', '', basename($filename)),
-                'url' => 'view/' . urlencode(str_replace([$dir . '/', '.md'], '', $filename)),
-                'created_time' => date('Y-m-d', filectime($filename)),
+                'url' => 'view/' . urlencode($relativeName),
+                'created_time' => date('Y-m-d H:i:s', filectime($filename)),
             ];
         }
-        $this->_render(['list' => $list,], 'list');
+
+        $this->_render([
+            'list' => $list,
+            'tags' => $tags,
+        ], 'list');
     }
 
     /**
@@ -76,7 +93,15 @@ class Yi
         }
 
         if (!empty($_FILES['file'])) {
-            $ret = move_uploaded_file($_FILES['file']['tmp_name'], $this->_getMarkdownPath() . '/' . $_FILES['file']['name']);
+            $category = $_POST['category'] ?? '';
+            $dir = $category ? $this->_getMarkdownPath() . '/' . $category : $this->_getMarkdownPath();
+            if (!is_dir($dir)) {
+                if (!mkdir($dir, 0775, true)) {
+                    die('mkdir failed');
+                }
+            }
+
+            $ret = move_uploaded_file($_FILES['file']['tmp_name'], $dir . '/' . $_FILES['file']['name']);
             if ($ret === false) {
                 die('上传失败');
             }
