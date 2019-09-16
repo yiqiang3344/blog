@@ -27,7 +27,7 @@ class Yi
 
         $this->cssStyle = [
             'bootstrap.css',
-            'base.css',
+            'markdown.css',
             'han.css',
         ];
         $baseDir = $this->_getMarkdownPath();
@@ -65,7 +65,7 @@ class Yi
     {
         $this->cssStyle = [
             'bootstrap.css',
-            'base.css',
+            'markdown.css',
             'han.css',
         ];
         $file = $this->_getMarkdownPath() . '/' . $blog . '.md';

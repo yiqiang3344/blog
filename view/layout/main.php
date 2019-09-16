@@ -5,10 +5,12 @@
     <?= $this->cssStyle ?>
 </head>
 <body>
-<div>
+<div class="container">
     <div class="header-title"><a href="/">西德尼易的博客</a></div>
 </div>
-<?= $this->content ?>
+<div class="container">
+    <?= $this->content ?>
+</div>
 <?= $this->jsScript ?>
 </body>
 </html>
