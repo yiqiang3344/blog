@@ -73,6 +73,18 @@ class Yi
             die('page not found');
         }
         $markdown = file_get_contents($file);
+        preg_match_all('/\(http\:\/\/statics\.blog\.sidneyyi\.com\/(.*)\)/u', $markdown, $matches);
+        $_replaces = [];
+        foreach ($matches[0] as $k => $_match) {
+            if (isset($_replaces[md5($_match)])) {
+                continue;
+            }
+            $_replaces[md5($_match)] = [
+                'from' => $_match,
+                'to' => '(' . $this->getOss()->getUrl(urldecode($matches[1][$k])) . ')',
+            ];
+        }
+        $markdown = str_replace(array_column($_replaces, 'from'), array_column($_replaces, 'to'), $markdown);
         $data = [
             'title' => str_replace('.md', '', basename($file)),
             'content' => $markdown,
@@ -217,5 +229,22 @@ class Yi
     private function _getMarkdownPath()
     {
         return __DIR__ . '/../web/markdown';
+    }
+
+    /**
+     * @return Oss
+     */
+    private function getOss()
+    {
+        $config = [
+            'accessKeyId' => 'LTAI4FbcuPQEy6r7r4ZPcgQA',
+            'accessKeySecret' => 'DfOa8kCi6pMNO4q6nPNkYwjOvgOQ4e',
+            'endpoint' => 'https://yjq-blog.oss-cn-hangzhou.aliyuncs.com',
+            'domain' => 'http://statics.blog.sidneyyi.com',
+            'securityToken' => null,
+            'timeout' => 3600,
+            'bucket' => 'yjq-blog',
+        ];
+        return Oss::getInstance($config['bucket'], $config);
     }
 }
