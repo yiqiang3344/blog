@@ -141,6 +141,10 @@ class Yi
      */
     private function _viewByPhp($data)
     {
+        $this->jsScripts = [
+            'jquery.js',
+            'markdown.js',
+        ];
         $parser = new GithubMarkdown();
         $data['content'] = $parser->parse($data['content']);
 
@@ -154,7 +158,7 @@ class Yi
             }
             $_replaces[md5($_match)] = [
                 'from' => $_match,
-                'to' => '<h' . $matches[1][$k] . ' id="toc' . $k . '"><a href="#toc' . $k . '">' . $matches[2][$k] . '</a></h' . $matches[1][$k] . '>',
+                'to' => '<h' . $matches[1][$k] . ' id="toc' . $k . '" class="js-toc-h">' . $matches[2][$k] . '<a class="font-public-anchor" href="#toc' . $k . '"></a></h' . $matches[1][$k] . '>',
             ];
             $toc[] = ['level' => $matches[1][$k], 'name' => $matches[2][$k], 'url' => '#toc' . $k];
         }

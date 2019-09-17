@@ -1,3 +1,10 @@
+@font-face {
+    font-family: "public.iconfont";
+    src: url('public.iconfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal
+}
+
 h1, h2, h3, h4 {
     color: #111111;
     font-weight: 400;
@@ -448,4 +455,30 @@ img{
 }
 .toc-h6{
     text-indent: 8em;
+}
+
+.font-public-anchor{
+    font-size: 16px;
+    position: relative;
+    line-height: 1.3;
+    top: 2px;
+    left: 12px;
+    color: #666;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    -moz-opacity: 0;
+    transition: all .4s;
+}
+.font-public-anchor-hover{
+    opacity: 1;
+}
+.font-public-anchor:after {
+    content: "\E008";
+    display: inline-block;
+    font-family: "public.iconfont";
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
