@@ -149,7 +149,7 @@ class Yi
         $data['content'] = $parser->parse($data['content']);
 
         //标题处理
-        preg_match_all('/\<h(.*)\>(.*)\<\/h(.*)\>/u', $data['content'], $matches);
+        preg_match_all('/<h(\d+)>(.*)<\/h(\d+)>/u', $data['content'], $matches);
         $_replaces = [];
         $toc = [];
         foreach ($matches[0] as $k => $_match) {
