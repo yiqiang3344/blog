@@ -77,6 +77,7 @@ class Yi
             die('page not found');
         }
         $markdown = file_get_contents($file);
+        //OSS地址处理
         preg_match_all('/\(http\:\/\/statics\.blog\.sidneyyi\.com\/(.*)\)/u', $markdown, $matches);
         $_replaces = [];
         foreach ($matches[0] as $k => $_match) {
@@ -89,12 +90,13 @@ class Yi
             ];
         }
         $markdown = str_replace(array_column($_replaces, 'from'), array_column($_replaces, 'to'), $markdown);
+
         $data = [
             'title' => str_replace('.md', '', basename($file)),
             'content' => $markdown,
             'created_time' => date('Y-m-d H:i:s', filectime($file)),
         ];
-        $this->_viewByJs($data);
+        $this->_viewByPhp($data);
     }
 
     /**
@@ -141,6 +143,33 @@ class Yi
     {
         $parser = new GithubMarkdown();
         $data['content'] = $parser->parse($data['content']);
+
+        //标题处理
+        preg_match_all('/\<h(.*)\>(.*)\<\/h(.*)\>/u', $data['content'], $matches);
+        $_replaces = [];
+        $toc = [];
+        foreach ($matches[0] as $k => $_match) {
+            if (isset($_replaces[md5($_match)])) {
+                continue;
+            }
+            $_replaces[md5($_match)] = [
+                'from' => $_match,
+                'to' => '<h' . $matches[1][$k] . ' id="toc' . $k . '"><a href="#toc' . $k . '">' . $matches[2][$k] . '</a></h' . $matches[1][$k] . '>',
+            ];
+            $toc[] = ['level' => $matches[1][$k], 'name' => $matches[2][$k], 'url' => '#toc' . $k];
+        }
+        $data['content'] = str_replace(array_column($_replaces, 'from'), array_column($_replaces, 'to'), $data['content']);
+
+        //目录处理
+        if ($toc) {
+            $tocString = '<div class="toc"><div class="toc-title">目录</div>';
+            foreach ($toc as $k => $_toc) {
+                $tocString .= '<div class="toc-h' . $_toc['level'] . '"><a href="' . $_toc['url'] . '">' . $_toc['name'] . '</a></div>';
+            }
+            $tocString = $tocString . '</div>';
+            $data['content'] = str_replace('[TOC]', $tocString, $data['content']);
+        }
+
         $this->_render($data, 'view');
     }
 
