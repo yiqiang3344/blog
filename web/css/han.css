@@ -249,12 +249,6 @@ a.md-toc-inner {
     color: var(--active-file-text-color);
 }
 
-*.in-text-selection, ::selection {
-    background: var(--active-file-bg-color);
-    text-shadow: none;
-    color: white;
-}
-
 .btn-primary {
     background-color: #2d2d2d;
     border-color: #020202;
