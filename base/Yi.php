@@ -21,6 +21,15 @@ class Yi
      * @throws \Exception
      * @throws \Throwable
      */
+    public function actionTest()
+    {
+        $this->_render([], 'test');
+    }
+
+    /**
+     * @throws \Exception
+     * @throws \Throwable
+     */
     public function actionList()
     {
         $category = $_GET['c'] ?? '';
@@ -144,6 +153,8 @@ class Yi
         $this->jsScripts = [
             'jquery.js',
             'markdown.js',
+            'mermaid.min.js',
+            'view/view.js',
         ];
         $parser = new GithubMarkdown();
         $data['content'] = $parser->parse($data['content']);
